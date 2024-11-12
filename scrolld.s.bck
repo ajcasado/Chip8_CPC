@@ -1,0 +1,553 @@
+;;versión cdtc_vieja (funciona pero hay que sacar el borrado del bucle tocho)
+;; scroll down 
+
+.globl _scrolld
+.globl _cdtc_screen_basic__table_hl
+.globl _screen_offset
+
+
+_scrolld:: 
+
+    ld a,l
+    or a
+    ret z   ;;if OPCODE_N =0 return
+    ld a,l
+    ;add a,a     ;;bY = OPCODE_N * 2
+    ld h,#128                ;; i = 128
+    ld c,#0
+loop:
+    cp h
+    ret z
+    dec h
+    cp h
+    ret z
+    ld l,h ;¿porqué l no es 0?
+    ld h, #_cdtc_screen_basic__table_hl >> 8 ; MSB table
+    ld d,(hl)               ; read MSB
+    inc h                   ; LSB table
+    ld e,(hl)               ; read LSB || DE tiene comienzo linea destino
+    ld h,l
+    push hl
+    ld b,a
+    sbc hl,bc
+    ld (#_sadd1+1),hl
+    ld l,h
+    ld h, #_cdtc_screen_basic__table_hl >> 8 ; MSB table
+    push de
+    ld d,(hl)               ; read MSB
+    inc h                   ; LSB table
+    ld e,(hl)               ; read LSB || DE tiene comienzo linea origen
+    ex de,hl                ;HL tiene comienzo linea origen
+    pop de                  ;DE tiene comienzo linea destino
+    push hl
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    pop de
+    pop hl
+    push hl
+    dec h
+    ld l,h
+    ld h, #_cdtc_screen_basic__table_hl >> 8 ; MSB table
+    push de
+    ld d,(hl)               ; read MSB
+    inc h                   ; LSB table
+    ld e,(hl) ; read LSB || DE tiene comienzo linea destino !!mejor calculando linea destino como |set 3,d|, según https://www.cpcwiki.eu/forum/programming/sprites-tiles-and-other-superfast-screen-output-approaches/msg225567/#msg225567
+    pop hl
+    push hl
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+; EL BORRADO HAY QUE SACARLO DE ESTE BUCLE Y HACER OTRO BORRANDO LAS bY PRIMERAS LINEAS, COMO EN c
+
+    pop hl
+    ld bc,#0 
+    ld de,#64
+    ld   (#_stack2+1), sp 
+    add  hl, de                   
+    di   ; esto mete lag y/o jiter a la interrupción?
+    ld   sp, hl       
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc            
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc
+_stack1:         
+    ld sp,#0               
+    ei
+_sadd1:
+    ld hl,#0
+    dec h
+    ld l,h
+    ld h, #_cdtc_screen_basic__table_hl >> 8 ; MSB table
+    ld d,(hl)               ; read MSB
+    inc h                   ; LSB table
+    ld e,(hl)               ; read LSB || DE tiene comienzo linea origen
+    ex de,hl                ;HL tiene comienzo linea origen
+    ld bc,#0
+    ld de,#64
+    ld   (#_stack2+1), sp
+    add  hl, de                 
+    di   ; esto mete lag y/o jiter a la interrupción?
+    ld   sp, hl       
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc            
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc           
+    push bc
+_stack2:         
+    ld sp,#0 
+    ei
+    pop hl
+    dec h
+    jp loop
+    ret
+
+;;versión videotable
+;; scroll down 
+
+.globl _scrolld
+.globl _videotable
+.globl _screen_offset
+
+
+_scrolld:: ; se puede optimizar usando 2º juego de registros?
+
+    ld a,l
+    or a
+    ret z   ;;if OPCODE_N =0 return
+    ld a,l
+    ;add a,a     ;;bY = OPCODE_N * 2
+    ld c,#128                ;; i = 128
+loop:
+    cp c
+    ret z
+    dec c
+    cp c
+    ret z
+    push bc
+    ld hl,#_videotable
+    add hl,bc  ;hl tiene videotable+(nY)
+    add hl,bc  ;hl tiene videotable+(nY*2)
+    ld (#_sadd1+1),hl 
+    ld e,(hl)
+    inc hl
+    ld d,(hl) ; de tiene videotable[nY]
+    ld c,a
+    dec hl
+    sbc hl,bc   ;hl tiene videotable+nY*2-bY
+    sbc hl,bc   ;hl tiene videotable+nY*2-bY*2
+    ld (#_sadd2+1),hl  
+    ld c,(hl) ; hacer la carga del contenido del puntero en de y volcarlo a hl con ex?
+    inc hl
+    ld b,(hl)
+    ld l,c
+    ld h,b  ;hl tiene videotable[nY - bY]
+    push hl ;se puede guardar directamente en inmediata a siguiente uso
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+_sadd1:
+    ld hl,#0 
+    dec hl
+    ld d,(hl)
+    dec hl
+    ld e,(hl); de tiene videotable[nY-1]    
+    pop hl ;se puede guardar directamente en inmediata a siguiente uso
+    push hl
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    ldi
+    pop hl
+    ld de,#0
+    ld bc,#64
+    ld   (#_stack1+1), sp 
+    add  hl, bc                   
+    di   ; esto mete lag y/o jiter a la interrupción?
+    ld   sp, hl       
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de            
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de
+_stack1:         
+    ld sp,#0               
+    ei
+_sadd2:
+    ld hl,#0
+    dec hl
+    ld b,(hl)
+    dec hl  ;hl tiene videotable+nY*2-bY*2-2
+    ld c,(hl)
+    ld l,c
+    ld h,b  ;hl tiene videotable[nY - bY - 1]
+    ld bc,#64
+    ld de,#0
+    ld   (#_stack2+1), sp 
+    add  hl, bc                   
+    di   ; esto mete lag y/o jiter a la interrupción?
+    ld   sp, hl       
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de            
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de           
+    push de
+_stack2:         
+    ld sp,#0 
+    ei
+    pop bc
+    dec c
+    jp loop
+    ret
