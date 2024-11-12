@@ -518,44 +518,7 @@ void exec00FC()
     cpu.PC += 2;
 }
 
-/*CHATGPT-VER NOTEBOOK PYTHON
-#include <stdint.h>
-#include <stdio.h>
 
-// Función para obtener un bit específico de un número
-uint8_t get_bit(uint8_t num, uint8_t bit) {
-    return (num >> bit) & 1;
-}
-
-// Función para calcular la posición de memoria de video
-uint16_t calculate_video_memory_position(uint8_t x, uint8_t y, uint8_t r1, uint8_t r6, uint8_t r9, uint8_t r12, uint8_t r13) {
-    // Calculando la dirección base con la fórmula corregida
-    uint16_t base_address = ((get_bit(r12, 5) << 15) | (get_bit(r12, 4) << 14) | (r12 & 0x03) << 3 | (r13 << 1));
-
-    // Cálculo del desplazamiento de línea
-    uint16_t lines_per_character_cell = r9 + 1;
-    uint16_t total_character_rows = y / lines_per_character_cell;
-    uint16_t line_within_character_cell = y % lines_per_character_cell;
-
-    // Ajuste basado en C9 para la línea dentro de la celda de caracteres
-    uint16_t c9_adjustment = (get_bit(line_within_character_cell, 2) << 13) | (get_bit(line_within_character_cell, 1) << 12) | (get_bit(line_within_character_cell, 0) << 11);
-    uint16_t line_offset = total_character_rows * r1 * 2 + c9_adjustment; // Dos bytes por carácter
-
-    // Cálculo del desplazamiento de columna
-    uint16_t column_offset = x * 2; // Dos bytes por carácter
-
-    // Cálculo final de la posición de memoria de video
-    uint16_t video_memory_position = base_address + line_offset + column_offset;
-    return video_memory_position;
-}
-
-int main() {
-    // Ejemplo de uso con valores ajustados para CRTC
-    uint16_t video_memory_position = calculate_video_memory_position(10, 20, 40, 30, 8, 0x30, 0x00);
-    printf("Video memory position: 0x%04X\n", video_memory_position);
-    return 0;
-}
-*/
 static void execDXY0() 
 {
     cpu.V[0xF] = 0;
